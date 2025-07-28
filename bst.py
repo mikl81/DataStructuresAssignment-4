@@ -5,6 +5,7 @@
 # Due Date:
 # Description:
 
+#TODO: Header
 
 import random
 from queue_and_stack import Queue, Stack
@@ -195,14 +196,25 @@ class BST:
         TODO: Write your implementation
         """
         # remove node that has no subtrees (no left or right nodes)
-        pass
+        if remove_node.value < remove_parent.value:
+            remove_parent.left = None
+        else:
+            remove_parent.right = None
 
     def _remove_one_subtree(self, remove_parent: BSTNode, remove_node: BSTNode) -> None:
         """
-        TODO: Write your implementation
+        TODO: Write implementation
         """
         # remove node that has a left or right subtree (only)
-        pass
+        if remove_node.right is None:
+            node = remove_node.left
+        else:
+            node = remove_node.right
+
+        if remove_node.value < remove_parent.value:
+            remove_parent.left = node
+        else:
+            remove_parent.right = node
 
     def _remove_two_subtrees(self, remove_parent: BSTNode, remove_node: BSTNode) -> None:
         """
