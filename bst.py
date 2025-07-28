@@ -152,9 +152,31 @@ class BST:
 
     def add(self, value: object) -> None:
         """
-        TODO: Write your implementation
+        Adds a node of the provided value to the tree. Duplicates allowed, greater or equal values to right.
+
+        args:
+            value: The desired node value to be added
+        returns:
+            None
         """
-        pass
+        current = None
+        node = self.get_root()
+        while node is not None:
+            current = node
+            if value < node.value:
+                node = node.left
+            else:
+                node = node.right
+
+        new_node = BSTNode(value)
+
+        if current is None:
+            self._root = new_node
+        else:
+            if value < current.value:
+                current.left = new_node
+            else:
+                current.right = new_node
 
     def remove(self, value: object) -> bool:
         """
