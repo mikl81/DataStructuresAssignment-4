@@ -114,6 +114,82 @@ class MyTestCase(unittest.TestCase):
                 raise Exception("PROBLEM WITH REMOVE OPERATION")
         print('remove() stress test finished')
 
+    def test_contains(self):
+        print("\nPDF - method contains() example 1")
+        print("---------------------------------")
+        tree = BST([10, 5, 15])
+        print(tree.contains(15))
+        print(tree.contains(-10))
+        print(tree.contains(15))
+
+        print("\nPDF - method contains() example 2")
+        print("---------------------------------")
+        tree = BST()
+        print(tree.contains(0))
+
+    def test_inorder(self):
+        print("\nPDF - method inorder_traversal() example 1")
+        print("---------------------------------")
+        tree = BST([10, 20, 5, 15, 17, 7, 12])
+        print(tree.inorder_traversal())
+
+        print("\nPDF - method inorder_traversal() example 2")
+        print("---------------------------------")
+        tree = BST([8, 10, -4, 5, -1])
+        print(tree.inorder_traversal())
+
+    def test_min(self):
+        print("\nPDF - method find_min() example 1")
+        print("---------------------------------")
+        tree = BST([10, 20, 5, 15, 17, 7, 12])
+        print(tree)
+        print("Minimum value is:", tree.find_min())
+
+        print("\nPDF - method find_min() example 2")
+        print("---------------------------------")
+        tree = BST([8, 10, -4, 5, -1])
+        print(tree)
+        print("Minimum value is:", tree.find_min())
+
+    def test_max(self):
+        print("\nPDF - method find_max() example 1")
+        print("---------------------------------")
+        tree = BST([10, 20, 5, 15, 17, 7, 12])
+        print(tree)
+        print("Maximum value is:", tree.find_max())
+
+        print("\nPDF - method find_max() example 2")
+        print("---------------------------------")
+        tree = BST([8, 10, -4, 5, -1])
+        print(tree)
+        print("Maximum value is:", tree.find_max())
+
+    def test_is_empty(self):
+        print("\nPDF - method is_empty() example 1")
+        print("---------------------------------")
+        tree = BST([10, 20, 5, 15, 17, 7, 12])
+        print("Tree is empty:", tree.is_empty())
+
+        print("\nPDF - method is_empty() example 2")
+        print("---------------------------------")
+        tree = BST()
+        print("Tree is empty:", tree.is_empty())
+
+    def test_make_empty(self):
+        print("\nPDF - method make_empty() example 1")
+        print("---------------------------------")
+        tree = BST([10, 20, 5, 15, 17, 7, 12])
+        print("Tree before make_empty():", tree)
+        tree.make_empty()
+        print("Tree after make_empty(): ", tree)
+
+        print("\nPDF - method make_empty() example 2")
+        print("---------------------------------")
+        tree = BST()
+        print("Tree before make_empty():", tree)
+        tree.make_empty()
+        print("Tree after make_empty(): ", tree)
+
 
 if __name__ == '__main__':
     unittest.main()
