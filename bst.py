@@ -183,7 +183,29 @@ class BST:
         """
         TODO: Write your implementation
         """
-        pass
+        parent = None
+        node = self.get_root()
+
+        while node is not None:
+            if node.value == value:
+                #value found
+                if node.left is None and node.right is None:
+                    self._remove_no_subtrees(parent, node)
+                    return True
+                elif node.left is not None and node.right is not None:
+                    self._remove_two_subtrees(parent, node)
+                    return True
+                else:
+                    self._remove_one_subtree(parent, node)
+                    return True
+            elif value < node.value:
+                parent = node
+                node = node.left
+            else:
+                parent = node
+                node = node.right
+
+        return False
 
     # Consider implementing methods that handle different removal scenarios; #
     # you may find that you're able to use some of them in the AVL.          #
@@ -196,6 +218,10 @@ class BST:
         TODO: Write your implementation
         """
         # remove node that has no subtrees (no left or right nodes)
+        if remove_parent is None:
+            self._root = None
+            return
+
         if remove_node.value < remove_parent.value:
             remove_parent.left = None
         else:
@@ -206,10 +232,15 @@ class BST:
         TODO: Write implementation
         """
         # remove node that has a left or right subtree (only)
+
         if remove_node.right is None:
             node = remove_node.left
         else:
             node = remove_node.right
+
+        if remove_parent is None:
+            self._root = node
+            return
 
         if remove_node.value < remove_parent.value:
             remove_parent.left = node
@@ -222,7 +253,47 @@ class BST:
         """
         # remove node that has two subtrees
         # need to find inorder successor and its parent (make a method!)
-        pass
+
+        successor_queue = self._inorder_successor(remove_node)
+        successor = successor_queue.dequeue()
+        parent = successor_queue.dequeue()
+
+        successor.left = remove_node.left
+        if remove_node.right.value != successor.value:
+            parent.left = successor.right
+            successor.right = remove_node.right
+
+        if remove_parent is None:
+            self._root = successor
+            return
+
+        if remove_node.value < remove_parent.value:
+            remove_parent.left = successor
+        else:
+            remove_parent.right = successor
+
+    def _inorder_successor(self, remove_node: BSTNode) -> Queue|BSTNode:
+        """
+        TODO: Write implementation
+        :param remove_node: The node to be removed
+        :return:
+        """
+        parent = None
+        current = None
+        node = remove_node.right
+
+        while node is not None:
+            parent = current
+            current = node
+            node = current.left
+
+        ret = Queue()
+
+        ret.enqueue(current)
+        ret.enqueue(parent)
+        return ret
+
+
 
     def contains(self, value: object) -> bool:
         """
