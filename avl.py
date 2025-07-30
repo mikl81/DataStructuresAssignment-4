@@ -102,13 +102,79 @@ class AVL(BST):
         """
         TODO: Write your implementation
         """
-        pass
+
+        new_node = AVLNode(value)
+
+        parent = None
+        node = self.get_root()
+        while node is not None:
+            parent = node
+            if value < node.value:
+                node = node.left
+            elif value > node.value:
+                node = node.right
+            else:
+                #Duplicate values not allowed
+                return
+
+        if parent:
+            if value < parent.value:
+                parent.left = new_node
+                new_node.parent = parent
+            else:
+                parent.right = new_node
+                new_node.parent = parent
+        else:
+            self._root = new_node
+
+        while parent is not None:
+            self._rebalance(parent)
+            parent = parent.parent
+
+
 
     def remove(self, value: object) -> bool:
         """
         TODO: Write your implementation
         """
-        pass
+        print(f"Removing {value}")
+
+        parent = None
+        node = self.get_root()
+
+        while node is not None:
+            if node.value == value:
+                # value found
+                if node.left is None and node.right is None:
+                    self._remove_no_subtrees(parent, node)
+                    while parent is not None:
+                        print(f"rebalancing after no subtree: {parent}")
+                        self._rebalance(parent)
+                        parent = parent.parent
+                    return True
+                elif node.left is not None and node.right is not None:
+                    print("remove two subtrees")
+                    successor = self._remove_two_subtrees(parent, node)
+                    while parent is not None:
+                        print(f"Rebalancing node: {parent}")
+                        self._rebalance(parent)
+                        parent = parent.parent
+                    return True
+                else:
+                    print(f"rebalancing after one subtree: {parent}")
+                    self._remove_one_subtree(parent, node)
+                    while parent is not None:
+                        self._rebalance(parent)
+                        parent = parent.parent
+                    return True
+            elif value < node.value:
+                parent = node
+                node = node.left
+            else:
+                parent = node
+                node = node.right
+
+        return False
 
     # Experiment and see if you can use the optional                         #
     # subtree removal methods defined in the BST here in the AVL.            #
@@ -122,7 +188,34 @@ class AVL(BST):
         """
         TODO: Write your implementation
         """
-        pass
+        successor_queue = self._inorder_successor(remove_node)
+        successor = successor_queue.dequeue()
+        parent = successor_queue.dequeue()
+
+        successor.left = remove_node.left
+        if successor.left:
+            successor.left.parent = successor
+
+        if remove_node.right.value != successor.value:
+            parent.left = successor.right
+            if successor.right:
+                successor.right.parent = parent
+            successor.right = remove_node.right
+            successor.right.parent = successor
+
+        successor.parent = remove_parent
+
+        # If none is provided as the parent, we are at the root
+        if remove_parent is None:
+            self._root = successor
+            return successor
+
+        if remove_node.value < remove_parent.value:
+            remove_parent.left = successor
+        else:
+            remove_parent.right = successor
+
+        return successor
 
     # It's highly recommended to implement                          #
     # the following methods for balancing the AVL Tree.             #
@@ -134,37 +227,97 @@ class AVL(BST):
         """
         TODO: Write your implementation
         """
-        pass
+        #Empty nodes are balanced
+        if not node:
+            return 0
+        return self._get_height(node.right) - self._get_height(node.left)
 
     def _get_height(self, node: AVLNode) -> int:
         """
         TODO: Write your implementation
         """
-        pass
+        #empty nodes have a height of -1
+        if not node:
+            return -1
+        return node.height
 
     def _rotate_left(self, node: AVLNode) -> AVLNode:
         """
         TODO: Write your implementation
         """
-        pass
+
+        center = node.right
+        node.right = center.left
+        if node.right is not None:
+            node.right.parent = node
+        center.left = node
+        center.parent = node.parent
+        node.parent = center
+        self._update_height(node)
+        self._update_height(center)
+        return center
 
     def _rotate_right(self, node: AVLNode) -> AVLNode:
         """
         TODO: Write your implementation
         """
-        pass
+        center = node.left
+        node.left = center.right
+        if node.left is not None:
+            node.left.parent = node
+        center.right = node
+        center.parent = node.parent
+        node.parent = center
+        self._update_height(node)
+        self._update_height(center)
+        return center
 
     def _update_height(self, node: AVLNode) -> None:
         """
         TODO: Write your implementation
         """
-        pass
+        node.height = max(self._get_height(node.left), self._get_height(node.right))+1
 
     def _rebalance(self, node: AVLNode) -> None:
         """
         TODO: Write your implementation
         """
-        pass
+
+        base_parent = node.parent
+
+        if self._balance_factor(node) < -1:
+            #left heavy
+            if self._balance_factor(node.left) > 0:
+                #double rotation
+                node.left = self._rotate_left(node.left)
+                node.left.parent = node
+            new_subroot = self._rotate_right(node)
+            new_subroot.parent = base_parent
+            if base_parent is None:
+                self._root = new_subroot
+            else:
+                if new_subroot.value < base_parent.value:
+                    base_parent.left = new_subroot
+                else:
+                    base_parent.right = new_subroot
+        elif self._balance_factor(node)  > 1:
+            #right heavy
+            if self._balance_factor(node.right) < 0:
+                #double rotation
+                node.right = self._rotate_right(node.right)
+                node.right.parent = node
+            new_subroot = self._rotate_left(node)
+            new_subroot.parent = base_parent
+            if base_parent is None:
+                self._root = new_subroot
+            else:
+                if new_subroot.value < base_parent.value:
+                    base_parent.left = new_subroot
+                else:
+                    base_parent.right = new_subroot
+        else:
+            self._update_height(node)
+
 
 
 # ------------------- BASIC TESTING -----------------------------------------
