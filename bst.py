@@ -248,7 +248,7 @@ class BST:
         For use in the remove method. Removes a node with 2 subtrees
         """
         # remove node that has two subtrees
-        # need to find inorder successor and its parent (make a method!)
+        # need to find inorder successor and its parent
 
         successor_queue = self._inorder_successor(remove_node)
         successor = successor_queue.dequeue()

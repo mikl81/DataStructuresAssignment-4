@@ -128,6 +128,27 @@ class MyTestCase(unittest.TestCase):
                 raise Exception("PROBLEM WITH REMOVE OPERATION")
         print('remove() stress test finished')
 
+    def test_height(self):
+        print("\nPDF - method height() example 1")
+        print("-------------------------------")
+        case = list(set(random.randrange(1, 1000) for _ in range(50)))
+        tree = AVL(case)
+        for value in case[::2]:
+            tree.remove(value)
+
+        print(tree.print_tree())
+
+        node = tree.get_root()
+        while node is not None:
+            if node.left is None:
+                bottom = node
+            else:
+                node = node.left
+
+        while node is not None:
+            print(f"{node} : Height -> {node.get_height()}")
+            node = node.parent
+
 
 if __name__ == '__main__':
     unittest.main()

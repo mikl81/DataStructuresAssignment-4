@@ -144,10 +144,8 @@ class AVL(BST):
 
     def remove(self, value: object) -> bool:
         """
-        TODO: Write your implementation
+        Removes a node of the specified value, and returns True if value is removed. False if no value found.
         """
-        print(f"Removing {value}")
-
         parent = None
         node = self.get_root()
 
@@ -157,20 +155,16 @@ class AVL(BST):
                 if node.left is None and node.right is None:
                     self._remove_no_subtrees(parent, node)
                     while parent is not None:
-                        print(f"rebalancing after no subtree: {parent}")
                         self._rebalance(parent)
                         parent = parent.parent
                     return True
                 elif node.left is not None and node.right is not None:
-                    print("remove two subtrees")
                     successor = self._remove_two_subtrees(parent, node)
                     while parent is not None:
-                        print(f"Rebalancing node: {parent}")
                         self._rebalance(parent)
                         parent = parent.parent
                     return True
                 else:
-                    print(f"rebalancing after one subtree: {parent}")
                     self._remove_one_subtree(parent, node)
                     while parent is not None:
                         self._rebalance(parent)
@@ -185,17 +179,11 @@ class AVL(BST):
 
         return False
 
-    # Experiment and see if you can use the optional                         #
-    # subtree removal methods defined in the BST here in the AVL.            #
-    # Call normally using self -> self._remove_no_subtrees(parent, node)     #
-    # You need to override the _remove_two_subtrees() method in any case.    #
-    # Remove these comments.                                                 #
-    # Remove these method stubs if you decide not to use them.               #
-    # Change this method in any way you'd like.                              #
+
 
     def _remove_two_subtrees(self, remove_parent: AVLNode, remove_node: AVLNode) -> AVLNode:
         """
-        TODO: Write your implementation
+        Removes
         """
         successor_queue = self._inorder_successor(remove_node)
         successor = successor_queue.dequeue()
@@ -226,6 +214,7 @@ class AVL(BST):
 
 
         self._update_height(successor)
+        self._update_height(remove_node)
         return successor
 
     # It's highly recommended to implement                          #
@@ -261,14 +250,14 @@ class AVL(BST):
         Performs a rotation to the left of the center node. Center node is defined as right of rotating node
         """
 
-        center = node.right
-        node.right = center.left
-        if node.right is not None:
+        center = node.right #Center is right of node
+        node.right = center.left #Less than center is greater than node.right
+        if node.right is not None:  #If we find value, assign parents
             node.right.parent = node
-        center.left = node
-        center.parent = node.parent
-        node.parent = center
-        self._update_height(node)
+        center.left = node #Move the node to the left of the center node
+        center.parent = node.parent #set the parents of the center to the original parents.
+        node.parent = center #set the nodes parent to the center node
+        self._update_height(node) #Update both the heights
         self._update_height(center)
         return center
 
@@ -277,6 +266,7 @@ class AVL(BST):
         Performs a rotation to the right of the center node. Center node is defined as left of rotating node
         """
 
+        #See above implementation for logic
         center = node.left
         node.left = center.right
         if node.left is not None:
@@ -298,7 +288,6 @@ class AVL(BST):
         """
         Rebalances a node by checking its balancing factor, then performing the appropriate rotations on the node
         """
-
         base_parent = node.parent
         base_balance = self._balance_factor(node)
 
@@ -308,11 +297,15 @@ class AVL(BST):
                 #double rotation
                 node.left = self._rotate_left(node.left)
                 node.left.parent = node
+            #Grab the new center node
             new_subroot = self._rotate_right(node)
+            #Set its parents
             new_subroot.parent = base_parent
+            #if the parent is Null, we are at root
             if base_parent is None:
                 self._root = new_subroot
             else:
+                #Check value and assign
                 if new_subroot.value < base_parent.value:
                     base_parent.left = new_subroot
                 else:
@@ -332,6 +325,7 @@ class AVL(BST):
                     base_parent.left = new_subroot
                 else:
                     base_parent.right = new_subroot
+            self._update_height(new_subroot)
         else:
             self._update_height(node)
 
