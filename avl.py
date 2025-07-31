@@ -259,7 +259,7 @@ class AVL(BST):
 
     def _rotate_right(self, node: AVLNode) -> AVLNode:
         """
-        TODO: Write your implementation
+        Rotates the node to balance
         """
         center = node.left
         node.left = center.right
