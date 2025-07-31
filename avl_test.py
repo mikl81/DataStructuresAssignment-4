@@ -79,6 +79,7 @@ class MyTestCase(unittest.TestCase):
             tree.remove(del_value)
             print('RESULT :', tree)
 
+    def test_remove_2(self):
         print("\nPDF - method remove() example 2")
         print("-------------------------------")
         test_cases = (
@@ -96,6 +97,7 @@ class MyTestCase(unittest.TestCase):
             tree.print_tree()
             print('')
 
+    def test_remove_3(self):
         print("\nPDF - method remove() example 3")
         print("-------------------------------")
         case = range(-9, 16, 2)
@@ -104,7 +106,7 @@ class MyTestCase(unittest.TestCase):
             print('INPUT  :', tree, del_value)
             tree.remove(del_value)
             print('RESULT :', tree)
-
+    def test_remove_4(self):
         print("\nPDF - method remove() example 4")
         print("-------------------------------")
         case = range(0, 34, 3)
@@ -114,7 +116,7 @@ class MyTestCase(unittest.TestCase):
             print('INPUT  :', tree, root_value)
             tree.remove(root_value)
             print('RESULT :', tree)
-
+    def test_remove_5(self):
         print("\nPDF - method remove() example 5")
         print("-------------------------------")
         for _ in range(100):

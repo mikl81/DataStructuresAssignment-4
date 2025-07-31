@@ -1,9 +1,9 @@
-# Name:
-# OSU Email:
+# Name: Michael Fitzgibbon
+# OSU Email: fitzgibm@oregonstate.edu
 # Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
+# Assignment: 4
+# Due Date: 07/28/2025
+# Description: A self balancing AVL tree
 
 
 import random
@@ -100,10 +100,14 @@ class AVL(BST):
 
     def add(self, value: object) -> None:
         """
-        TODO: Write your implementation
+        Inserts a node in the tree, then rebalances all affected nodes in the tree.
+
+        :param: The value to add to the tree, duplicate values not allowed
+        :return: None
         """
 
-        new_node = AVLNode(value)
+        new_node = AVLNode(value) # Create node
+
 
         parent = None
         node = self.get_root()
@@ -117,17 +121,22 @@ class AVL(BST):
                 #Duplicate values not allowed
                 return
 
+        #Here parent is the last node in the tree
         if parent:
             if value < parent.value:
+                #Node belongs to the left of the parent node
                 parent.left = new_node
                 new_node.parent = parent
             else:
+                #Node belongs to right
                 parent.right = new_node
                 new_node.parent = parent
         else:
+            #No parent means new node is the root
             self._root = new_node
 
         while parent is not None:
+            #Rebalance starting with the parent until we reach the root
             self._rebalance(parent)
             parent = parent.parent
 
@@ -215,6 +224,8 @@ class AVL(BST):
         else:
             remove_parent.right = successor
 
+
+        self._update_height(successor)
         return successor
 
     # It's highly recommended to implement                          #
@@ -225,7 +236,9 @@ class AVL(BST):
 
     def _balance_factor(self, node: AVLNode) -> int:
         """
-        TODO: Write your implementation
+        Returns the balance factor of the node, defined as the weight of the right node minus the left
+        :arg node: The node to calculate balance factor
+        :return: The balance factor
         """
         #Empty nodes are balanced
         if not node:
@@ -234,7 +247,9 @@ class AVL(BST):
 
     def _get_height(self, node: AVLNode) -> int:
         """
-        TODO: Write your implementation
+        Returns the height of the node, -1 for null nodes
+        :arg node: The node to check
+        :return: Int of the node height
         """
         #empty nodes have a height of -1
         if not node:
@@ -243,7 +258,7 @@ class AVL(BST):
 
     def _rotate_left(self, node: AVLNode) -> AVLNode:
         """
-        TODO: Write your implementation
+        Performs a rotation to the left of the center node. Center node is defined as right of rotating node
         """
 
         center = node.right
@@ -259,8 +274,9 @@ class AVL(BST):
 
     def _rotate_right(self, node: AVLNode) -> AVLNode:
         """
-        Rotates the node to balance
+        Performs a rotation to the right of the center node. Center node is defined as left of rotating node
         """
+
         center = node.left
         node.left = center.right
         if node.left is not None:
@@ -274,18 +290,19 @@ class AVL(BST):
 
     def _update_height(self, node: AVLNode) -> None:
         """
-        TODO: Write your implementation
+        Updates the height as 1 plus the height of the highest child node
         """
         node.height = max(self._get_height(node.left), self._get_height(node.right))+1
 
     def _rebalance(self, node: AVLNode) -> None:
         """
-        TODO: Write your implementation
+        Rebalances a node by checking its balancing factor, then performing the appropriate rotations on the node
         """
 
         base_parent = node.parent
+        base_balance = self._balance_factor(node)
 
-        if self._balance_factor(node) < -1:
+        if base_balance < -1:
             #left heavy
             if self._balance_factor(node.left) > 0:
                 #double rotation
@@ -300,7 +317,7 @@ class AVL(BST):
                     base_parent.left = new_subroot
                 else:
                     base_parent.right = new_subroot
-        elif self._balance_factor(node)  > 1:
+        elif base_balance  > 1:
             #right heavy
             if self._balance_factor(node.right) < 0:
                 #double rotation
