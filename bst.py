@@ -351,7 +351,7 @@ class BST:
 
         while node is not None:
             if node.left is None:
-                return node
+                return node.value
             else:
                 node = node.left
 
@@ -367,7 +367,7 @@ class BST:
 
         while node is not None:
             if node.right is None:
-                return node
+                return node.value
             else:
                 node = node.right
 
